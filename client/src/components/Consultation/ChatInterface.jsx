@@ -30,7 +30,7 @@ const ChatInterface = () => {
 
         try {
             // Call Python FastAPI
-            const response = await axios.post('http://localhost:8000/api/chat', {
+            const response = await axios.post((import.meta.env.VITE_AI_URL || 'http://localhost:8000') + '/api/chat', {
                 message: userMsg.text
             });
 
@@ -80,8 +80,8 @@ const ChatInterface = () => {
                                     {msg.sender === 'user' ? <FaUser className="text-sm" /> : <FaRobot className="text-sm" />}
                                 </div>
                                 <div className={`p-4 rounded-2xl ${msg.sender === 'user'
-                                        ? 'bg-purple-600 text-white rounded-br-none'
-                                        : 'bg-white/10 border border-white/10 text-gray-100 rounded-bl-none'
+                                    ? 'bg-purple-600 text-white rounded-br-none'
+                                    : 'bg-white/10 border border-white/10 text-gray-100 rounded-bl-none'
                                     }`}>
                                     <p className="text-sm leading-relaxed">{msg.text}</p>
                                 </div>

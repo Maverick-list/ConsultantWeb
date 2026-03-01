@@ -22,7 +22,7 @@ const VideoRoom = () => {
     const streamRef = useRef(null);
 
     useEffect(() => {
-        socketRef.current = io('http://localhost:5001');
+        socketRef.current = io((import.meta.env.VITE_SERVER_URL || 'http://localhost:5001'));
 
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((currentStream) => {
             setStream(currentStream);

@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Teko:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #4F46E5;
+  --color-secondary: #9333EA;
+  --color-dark: #0F172A;
+  --font-teko: "Teko", sans-serif;
+  --font-inter: "Inter", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-dark text-white overflow-x-hidden antialiased;
+    font-family: var(--font-inter);
+    line-height: 1.6;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-teko);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+}
+
+@layer components {
+
+  /* Glassmorphism Refined */
+  .glass-panel {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl;
+  }
+
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl transition-all duration-300;
+  }
+
+  .glass-card:hover {
+    @apply bg-white/10 border-white/20 -translate-y-1;
+    box-shadow: 0 0 30px rgba(79, 70, 229, 0.2);
+  }
+
+  /* Premium Button Shimmer */
+  .btn-premium {
+    @apply relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-all duration-300 hover:shadow-indigo-500/50 hover:scale-[1.02] active:scale-95 text-center;
+    font-family: var(--font-teko);
+    font-size: 1.125rem;
+    letter-spacing: 0.1em;
+  }
+
+  .btn-premium::after {
+    content: '';
+    @apply absolute top-0 left-[-100%] w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-all duration-500;
+    transform: skewX(-15deg);
+  }
+
+  .btn-premium:hover::after {
+    @apply left-[100%];
+  }
+
+  /* Custom Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-black/20 rounded-lg;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-white/20 rounded-lg hover:bg-white/30;
+  }
+}
+
+/* AOS Custom Animations (Optional overrides) */
+[data-aos] {
+  transition-duration: 800ms !important;
+  transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}

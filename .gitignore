@@ -1,0 +1,9 @@
+node_modules/
+.env
+database.sqlite
+ai_service/venv/
+ai_service/__pycache__/
+.DS_Store
+dist/
+build/
+.vercel

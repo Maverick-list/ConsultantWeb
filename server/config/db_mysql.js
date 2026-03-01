@@ -1,10 +1,15 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
+require('sqlite3'); // Added for Vercel NFT tracing
 
-// Using sqlite for demo purposes to avoid mysql connection errors
+const path = require('path');
+const storagePath = process.env.NODE_ENV === 'production'
+    ? '/tmp/database.sqlite'
+    : './database.sqlite';
+
 const sequelize = new Sequelize({
     dialect: 'sqlite',
-    storage: './database.sqlite',
+    storage: storagePath,
     logging: false
 });
 

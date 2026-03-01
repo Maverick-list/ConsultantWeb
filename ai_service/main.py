@@ -18,7 +18,7 @@ app.add_middleware(
 
 # Configure Gemini
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY", "Your defaults API Key"))
-model = genai.GenerativeModel('gemini-2.0-flash')
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 class ChatRequest(BaseModel):
     message: str
@@ -43,7 +43,8 @@ def chat(request: ChatRequest):
         response = model.generate_content(prompt)
         response_text = response.text
     except Exception as e:
-        response_text = f"Mohon maaf, sistem AI Consultant saat ini sedang sibuk atau mengalami kendala: {str(e)}"
+        print(f"Gemini API Error: {str(e)}")
+        response_text = "Mohon maaf, saya tidak dapat merespon saat ini karena batas limit (quota) API telah habis atau model belum tersedia untuk akun ini. Silakan periksa pengaturan Google AI Studio Anda."
 
     return {
         "response": response_text,

@@ -2,18 +2,23 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import time
-import random
+import os
+import google.generativeai as genai
 
 app = FastAPI()
 
 # CORS configuration to allow React Frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"], # Vite default port
+    allow_origins=["*"], # Allow all origins for Vercel deployment
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Configure Gemini
+genai.configure(api_key=os.environ.get("GEMINI_API_KEY", "Your defaults API Key"))
+model = genai.GenerativeModel('gemini-2.0-flash')
 
 class ChatRequest(BaseModel):
     message: str
@@ -24,19 +29,22 @@ def read_root():
 
 @app.post("/api/chat")
 def chat(request: ChatRequest):
-    # Mock LLM Logic: Indonesia vs Abroad study advice
-    user_msg = request.message.lower()
+    user_msg = request.message
     
-    response_text = ""
+    prompt = f"""
+    Kamu adalah seorang AI Consultant ahli yang ramah dan berpengetahuan luas tentang pendidikan, beasiswa, dan universitas baik di dalam maupun luar negeri. 
+    Kamu bertugas membantu pelajar (student) yang menggunakan platform 'StudentPro', sebuah Web Konsultasi Hukum dan Akademik, untuk menjawab berbagai pertanyaan mengenai pendidikan mereka.
+    Berikan jawaban yang ringkas, membantu, terstruktur dengan baik (menggunakan bullet points jika perlu), dan gunakan bahasa Indonesia yang asik, suportif, dan mudah dipahami.
     
-    if "abroad" in user_msg or "luar negeri" in user_msg:
-        response_text = "Studying abroad offers global exposure, cultural diversity, and often access to cutting-edge research facilities. Popular destinations include UK (Oxford, Cambridge), US (Ivy League), and Australia. Consider looking into scholarships like LPDP."
-    elif "indonesia" in user_msg or "dalam negeri" in user_msg:
-        response_text = "Studying in Indonesia is cost-effective and allows you to build a strong local network. Top universities like UI, ITB, and UGM offer world-class education with increasing international partnerships."
-    else:
-        response_text = "I am your Academic AI Consultant. Ask me about studying in Indonesia vs Abroad, choosing major, or scholarship opportunities!"
+    Pertanyaan user: "{user_msg}"
+    """
+    
+    try:
+        response = model.generate_content(prompt)
+        response_text = response.text
+    except Exception as e:
+        response_text = f"Mohon maaf, sistem AI Consultant saat ini sedang sibuk atau mengalami kendala: {str(e)}"
 
-    # Simulate streaming "thinking" delay
     return {
         "response": response_text,
         "timestamp": time.time()
